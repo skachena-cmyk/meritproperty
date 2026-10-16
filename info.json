@@ -1,0 +1,107 @@
+{
+  "types": {
+    "condo": "คอนโด",
+    "house": "บ้านเดี่ยว",
+    "townhome": "ทาวน์โฮม",
+    "commercial": "อาคารพาณิชย์",
+    "land": "ที่ดิน"
+  },
+  "properties": [
+    {
+      "id": "MP001",
+      "title": "คอนโดไลฟ์ BTS ลาดพร้าว",
+      "type": "condo",
+      "status": "กำลังขาย",
+      "location": "ลาดพร้าว",
+      "beds": 1,
+      "baths": 1,
+      "area": "35 ตร.ม.",
+      "price": "฿2,200,000",
+      "image": "mrtpt-001 life ladpro.jpg",
+      "description": "ชั้น13 วิวเมือง ตกแต่งครบ พร้อมเข้าอยู่"
+    },
+    {
+      "id": "MP002",
+      "title": "คอนโดSiamese Exclusive31 ห้องมุม",
+      "type": "condo",
+      "status": "ปล่อยเช่าแล้ว",
+      "location": "สุขุมวิท",
+      "beds": 3,
+      "baths": 2,
+      "area": "116 ตร.ม.",
+      "price": "฿85,000 / เดือน",
+      "image": "mrtpt-002 siames ex31.jpg",
+      "description": "ชั้น20 แสงธรรมชาติดี ใกล้ห้างและโรงพยาบาล"
+    },
+    {
+      "id": "MP003",
+      "title": "บ้านเดี่ยว 2 ชั้น Golden Vilage พัฒนาการ",
+      "type": "house",
+      "status": "ขายแล้ว",
+      "location": "อ่อนนุช-พัฒนาการ",
+      "beds": 4,
+      "baths": 4,
+      "area": "330 ตร.ม.",
+      "price": "฿12,900,000",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+      "description": "บ้านพร้อมสวน ที่จอดรถ 2 คัน ที่ดิน 80 ตร.วา"
+    },
+    {
+      "id": "MP004",
+      "title": "คอนโด แอมบาสซี่ พัทยา",
+      "type": "condo",
+      "status": "กำลังขาย",
+      "location": "รัชดาภิเษก",
+      "beds": 1,
+      "baths": 2,
+      "area": "55 ตร.ม.",
+      "price": "฿6,500,000",
+      "image": "mrtpt-004 embassy.jpg",
+      "description": "ใกล้ หาดจอมเทียน พัทยา เดินทางสะดวก ชั้น 8"
+    },
+    { 
+    "id": "MP005",
+      "title": "คอนโด B REPUBLIC 101",
+      "type": "condo",
+      "status": "ให้เช่า",
+      "location": "สุขุมวิท101",
+      "beds": 3,
+      "baths": 2,
+      "area": "83 ตร.ม.",
+      "price": "฿65,000 / เดือน",
+      "image": "mrtpt-004 embassy.jpg",
+      "description": "ใกล้ ห้างสรรพสินค้า BTS ชั้น 3"
+    },
+    {
+      "id": "MP006",
+      "title": "บ้านเดี่ยว 2 ชั้น Country Home เขาใหญ่",
+      "type": "house",
+      "status": "กำลังขาย",
+      "location": "ปากช่อง-เขาใหญ่",
+      "beds": 4,
+      "baths": 3,
+      "area": "350 ตร.ม.",
+      "price": "฿10,000,000",
+      "image": "mrtpt-006 country.jpg",
+      "description": "บ้านพักตากอากาศหรู พร้อมสระว่ายน้ำ ที่จอดรถ 2 คัน ที่ดิน 200 ตร.วา"
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ]
+}
