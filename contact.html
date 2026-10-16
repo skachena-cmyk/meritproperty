@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ติดต่อเรา | Merit Property</title>
+  <meta name="description" content="ปรึกษาเรื่องขายบ้านหรือคอนโดกับ Merit Property บริการถ่ายภาพและลงประกาศขายอสังหาฯ ในกรุงเทพฯ ครอบคลุม 12 ทำเลหลัก" />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="style.ccs" />
+  <style>
+    :root{
+      --primary:#0f2c4c; --primary-dark:#0a1f36; --accent:#c9a24a; --accent-dark:#b08a35;
+      --light:#f6f7f9; --text:#333; --muted:#6b7280; --white:#fff;
+      --radius:14px; --shadow:0 8px 24px rgba(0,0,0,.08);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Prompt',sans-serif;color:var(--text);line-height:1.7;background:var(--white)}
+    a{text-decoration:none;color:inherit}
+    .container{width:90%;max-width:1200px;margin:auto}
+    section{padding:90px 0}
+    .eyebrow{display:inline-block;color:var(--accent);font-weight:600;letter-spacing:.5px;margin-bottom:10px}
+    h1,h2,h3{color:var(--primary);line-height:1.35}
+    .btn{display:inline-block;padding:13px 30px;border-radius:50px;font-weight:500;transition:.3s;cursor:pointer;border:none;font-family:inherit;font-size:1rem;text-align:center}
+    .btn-primary{background:var(--accent);color:var(--white)}
+    .btn-primary:hover{background:var(--accent-dark);transform:translateY(-2px)}
+    .btn-outline{border:2px solid var(--primary);color:var(--primary);background:transparent}
+    .btn-outline:hover{background:var(--primary);color:var(--white)}
+    .btn-light{border:2px solid var(--white);color:var(--white)}
+    .btn-light:hover{background:var(--white);color:var(--primary)}
+
+    /* ===== Header ===== */
+    header{position:sticky;top:0;z-index:1000;background:var(--white);box-shadow:0 2px 12px rgba(0,0,0,.06)}
+    nav{display:flex;justify-content:space-between;align-items:center;height:76px;gap:20px}
+    .logo{font-size:1.45rem;font-weight:700;color:var(--primary)}
+    .logo b{color:var(--accent)}
+    .nav-links{display:flex;gap:28px;list-style:none}
+    .nav-links a{font-weight:500;transition:.3s}
+    .nav-links a:hover,.nav-links a.active{color:var(--accent)}
+    .nav-actions{display:flex;gap:12px;align-items:center}
+    .nav-actions .btn{padding:10px 22px;font-size:.95rem}
+    .menu-toggle{display:none;font-size:1.8rem;background:none;border:none;cursor:pointer;color:var(--primary)}
+
+    /* ===== Hero ===== */
+    .hero{background:linear-gradient(135deg,var(--primary),#1d4775);color:var(--white);text-align:center;padding:100px 0 90px}
+    .hero .eyebrow{color:var(--accent)}
+    .hero h1{color:var(--white);font-size:2.6rem;margin-bottom:18px}
+    .hero p{max-width:720px;margin:0 auto 30px;opacity:.9;font-size:1.1rem}
+    .hero p a{color:var(--accent);font-weight:600;text-decoration:underline}
+    .hero-buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+    /* ===== Contact ===== */
+    .contact-wrap{display:grid;grid-template-columns:1fr 1.25fr;gap:50px;align-items:start}
+    .contact-text h2{font-size:2rem;margin-bottom:8px}
+    .contact-text p{color:var(--muted);margin-bottom:28px}
+    .info-item{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+    .info-item .ic{width:46px;height:46px;flex-shrink:0;border-radius:12px;background:var(--light);display:flex;align-items:center;justify-content:center;font-size:1.25rem}
+    .info-item small{display:block;color:var(--muted);font-size:.85rem}
+    .info-item a{word-break:break-all}
+    .info-item a:hover{color:var(--accent)}
+    .map{margin-top:24px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+    .map iframe{width:100%;height:260px;border:0;display:block}
+
+    .contact-form{background:var(--white);padding:40px;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid #eee}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .form-group{margin-bottom:18px}
+    .form-group label{display:block;margin-bottom:6px;font-weight:500;font-size:.95rem}
+    .form-group label .req{color:#d14343}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 15px;border:1px solid #ddd;border-radius:8px;font-family:inherit;font-size:1rem;transition:.3s;background:var(--white)}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(201,162,74,.15)}
+    .form-note{font-size:.85rem;color:var(--muted);margin-top:12px;text-align:center}
+    .form-msg{margin-top:15px;padding:12px;border-radius:8px;display:none}
+    .form-msg.success{display:block;background:#e7f6ec;color:#1e7b3a}
+    .form-msg.error{display:block;background:#fdeaea;color:#b42318}
+
+    /* ===== Service Area ===== */
+    .area{background:var(--light);text-align:center}
+    .area h2{font-size:2rem;margin-bottom:14px}
+    .area p{max-width:720px;margin:0 auto 30px;color:var(--muted)}
+    .chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:35px}
+    .chip{background:var(--white);border:1px solid #e3e3e3;padding:8px 18px;border-radius:30px;font-size:.95rem}
+    .chip.main{border-color:var(--accent);color:var(--primary);font-weight:500}
+
+    /* ===== FAQ ===== */
+    .faq-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:50px}
+    .faq-intro h2{font-size:2rem;margin-bottom:14px}
+    .faq-intro p{color:var(--muted);margin-bottom:24px}
+    .faq-intro .info-item a{font-weight:500}
+    details{border:1px solid #e6e6e6;border-radius:10px;margin-bottom:12px;background:var(--white);transition:.3s}
+    details[open]{border-color:var(--accent);box-shadow:var(--shadow)}
+    summary{padding:18px 22px;cursor:pointer;font-weight:500;color:var(--primary);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+    summary::-webkit-details-marker{display:none}
+    summary::after{content:"+";font-size:1.5rem;color:var(--accent);transition:.3s;flex-shrink:0}
+    details[open] summary::after{transform:rotate(45deg)}
+    details .answer{padding:0 22px 18px;color:var(--muted)}
+
+    /* ===== CTA ===== */
+    .cta{background:var(--primary);color:var(--white);text-align:center;padding:80px 0}
+    .cta h2{color:var(--white);font-size:2rem;margin-bottom:14px}
+    .cta p{opacity:.85;max-width:650px;margin:0 auto 30px}
+    .cta .hero-buttons .btn{min-width:220px;word-break:break-all}
+
+    /* ===== Footer ===== */
+    footer{background:var(--primary-dark);color:#c5ccd6;padding:60px 0 25px;font-size:.95rem}
+    .footer-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:35px;margin-bottom:40px}
+    footer .logo{color:var(--white);display:inline-block;margin-bottom:12px}
+    footer h4{color:var(--white);margin-bottom:14px;font-weight:600}
+    footer ul{list-style:none}
+    footer li{margin-bottom:8px;word-break:break-all}
+    footer a:hover{color:var(--accent)}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.88rem}
+    .footer-bottom .links{display:flex;gap:20px}
+
+    /* ===== Floating Buttons ===== */
+    .float-btns{position:fixed;right:20px;bottom:20px;display:flex;flex-direction:column;gap:12px;z-index:999}
+    .float-btns a{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.2);transition:.3s;font-size:.8rem}
+    .float-btns a:hover{transform:scale(1.1)}
+    .float-line{background:#06c755}
+    .float-call{background:var(--accent);font-size:1.5rem!important}
+
+    /* ===== Responsive ===== */
+    @media (max-width:992px){
+      .contact-wrap,.faq-wrap{grid-template-columns:1fr}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .hero h1{font-size:2.1rem}
+    }
+    @media (max-width:820px){
+      .menu-toggle{display:block}
+      .nav-actions .btn-outline{display:none}
+      .nav-links{position:absolute;top:76px;left:0;width:100%;flex-direction:column;background:var(--white);text-align:center;gap:0;display:none;box-shadow:0 10px 20px rgba(0,0,0,.08)}
+      .nav-links.show{display:flex}
+      .nav-links li{padding:14px 0;border-top:1px solid #f0f0f0}
+    }
+    @media (max-width:600px){
+      section{padding:65px 0}
+      .form-row{grid-template-columns:1fr}
+      .contact-form{padding:28px 22px}
+      .footer-grid{grid-template-columns:1fr}
+      .nav-actions .btn{padding:9px 16px;font-size:.88rem}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header>
+    <div class="container">
+      <nav>
+        <a href="index.html" class="logo">Merit<b>Property</b></a>
+        <!-- ถ้ามีไฟล์โลโก้: <a href="index.html"><img src="logo.png" alt="Merit Property" height="44"></a> -->
+        <ul class="nav-links" id="navLinks">
+          <li><a href="about.html">เกี่ยวกับเรา</a></li>
+          <li><a href="services.html">บริการของเรา</a></li>
+          <li><a href="portfolio.html">ผลงานของเรา</a></li>
+          <li><a href="contact.html" class="active">ติดต่อเรา</a></li>
+        </ul>
+        <div class="nav-actions">
+          <a class="btn btn-outline js-tel">โทร <span class="js-phone"></span></a>
+          <a href="#contact-form" class="btn btn-primary">จองบริการ</a>
+          <button class="menu-toggle" id="menuToggle" aria-label="เมนู">☰</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">ติดต่อเรา</span>
+      <h1>ปรึกษาเรื่องขายบ้านหรือคอนโดของคุณได้เลย</h1>
+      <p>
+        โทร <a class="js-tel"><span class="js-phone"></span></a>
+        หรือไลน์หาเราที่ <a class="js-line" target="_blank" rel="noopener"> id @398ccpcc </a>
+        เพื่อพูดคุยเรื่องการถ่ายภาพและลงประกาศขาย อสังหาฯ ในกรุงเทพฯ เราตอบกลับภายในวันทำการ
+      </p>
+      <div class="hero-buttons">
+        <a class="btn btn-primary js-tel">📞 โทรหาเรา</a>
+        <a class="btn btn-light js-line" target="_blank" rel="noopener">💬 แอดไลน์</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Contact + Form ===== -->
+  <section id="contact-form">
+    <div class="container contact-wrap">
+      <div class="contact-text">
+        <span class="eyebrow">ติดต่อ Merit Property</span>
+        <h2>พูดคุยกับตัวแทนอสังหาฯ ที่ดูแลจริง</h2>
+        <p>ส่งรายละเอียดทรัพย์สินของคุณมา แล้วเราจะติดต่อกลับเพื่อให้คำปรึกษาเรื่องการถ่ายภาพและรายละเอียดประกาศขายที่ตรงจุด</p>
+
+        <div class="info-item"><div class="ic">✉️</div><div><small>อีเมล</small><a class="js-mail"><span class="js-email"></span></a></div></div>
+        <div class="info-item"><div class="ic">📞</div><div><small>โทรศัพท์</small><a class="js-tel"><span class="js-phone"></span></a></div></div>
+        <div class="info-item"><div class="ic">📍</div><div><small>ที่อยู่</small>109/32 Ratphatthana20 , Saphansung, Bangkok</div></div>
+        <div class="info-item"><div class="ic">🕘</div><div><small>เวลาทำการ</small>จันทร์–เสาร์ 9:00 – 18:00 น.</div></div>
+
+        <div class="map">
+          <iframe src="https://www.google.com/maps?q=Ratphatthana20,+Saphansung,+Bangkok&output=embed" loading="lazy" title="แผนที่ Merit Property"></iframe>
+        </div>
+      </div>
+
+      <form class="contact-form" id="contactForm">
+        <div class="form-group">
+          <label for="name">ชื่อ <span class="req">*</span></label>
+          <input type="text" id="name" name="ชื่อ" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">อีเมล <span class="req">*</span></label>
+            <input type="email" id="email" name="อีเมล" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">เบอร์โทรศัพท์ <span class="req">*</span></label>
+            <input type="tel" id="phone" name="เบอร์โทรศัพท์" pattern="[0-9\-\s]{9,12}" placeholder="08X-XXX-XXXX" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ptype">ประเภททรัพย์สินที่ต้องการขาย <span class="req">*</span></label>
+            <select id="ptype" name="ประเภททรัพย์สิน" required>
+              <option value="">-- เลือกประเภท --</option>
+              <option>คอนโดมิเนียม</option>
+              <option>บ้านเดี่ยว</option>
+              <option>ทาวน์โฮม / ทาวน์เฮาส์</option>
+              <option>อาคารพาณิชย์</option>
+              <option>ที่ดิน</option>
+              <option>อื่น ๆ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="location">ทำเลที่ตั้งของทรัพย์สิน <span class="req">*</span></label>
+            <input type="text" id="location" name="ทำเลที่ตั้ง" placeholder="เช่น สุขุมวิท 24, อโศก" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="message">รายละเอียดเพิ่มเติม</label>
+          <textarea id="message" name="รายละเอียดเพิ่มเติม" rows="5" placeholder="เช่น ชื่อโครงการ ขนาดห้อง ชั้น ราคาที่ต้องการ"></textarea>
+        </div>
+        <!-- กันสแปม (ห้ามลบ) -->
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+        <button type="submit" class="btn btn-primary" style="width:100%">ส่งข้อความ</button>
+        <p class="form-note">เราตอบกลับภายในวันทำการ (จันทร์–เสาร์) ข้อมูลของคุณจะถูกเก็บเป็นความลับ</p>
+        <div class="form-msg" id="formMsg"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== Service Area ===== -->
+  <section class="area">
+    <div class="container">
+      <span class="eyebrow">พื้นที่บริการ</span>
+      <h2>ครอบคลุม 12 ทำเลหลักทั่วกรุงเทพฯ</h2>
+      <p>เราดูแลประกาศขายและเช่าอสังหาฯ ในทำเลสำคัญของกรุงเทพฯ ตั้งแต่สุขุมวิท อโศก จนถึงพระราม 3 ทุกยูนิตถ่ายภาพและลงรายละเอียดครบ</p>
+      <div class="chips">
+        <span class="chip main">สุขุมวิท</span>
+        <span class="chip main">อโศก</span>
+        <span class="chip main">พระราม 3</span>
+        <span class="chip main">พระราม 4</span>
+        <span class="chip">สีลม</span>
+        <span class="chip">พหล-อารีย์</span>
+        <span class="chip">เอกมัย</span>
+        <span class="chip">อ่อนนุช</span>
+        <span class="chip">เพชรบุรี</span>
+        <span class="chip">รัชดาภิเษก</span>
+        <span class="chip">พระราม9</span>
+        <span class="chip">สาทร-ตากสิน</span>
+      </div>
+      <a href="services.html" class="btn btn-outline">ดูบริการของเรา</a>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq">
+    <div class="container faq-wrap">
+      <div class="faq-intro">
+        <span class="eyebrow">คำถามที่พบบ่อย</span>
+        <h2>ติดต่อเรามีคำถามอะไรก่อนเริ่มไหม?</h2>
+        <p>ตอบข้อสงสัยก่อนตัดสินใจติดต่อเรา หากมีคำถามเพิ่มเติมทักมาได้เลย</p>
+        <div class="info-item"><div class="ic">📞</div><div><small>โทร</small><a class="js-tel"><span class="js-phone"></span></a></div></div>
+        <div class="info-item"><div class="ic">✉️</div><div><small>อีเมล</small><a class="js-mail"><span class="js-email"></span></a></div></div>
+      </div>
+
+      <!-- คำตอบด้านล่างเป็นร่าง กรุณาแก้ให้ตรงกับบริการจริง -->
+      <div class="faq-list">
+        <details>
+          <summary>ถ่ายภาพและลงประกาศใช้เวลานานแค่ไหน?</summary>
+          <div class="answer">หลังนัดหมาย ทีมงานจะเข้าถ่ายภาพตามวันเวลาที่สะดวก และลงประกาศได้ภายใน [3] วันทำการหลังถ่ายภาพเสร็จ</div>
+        </details>
+        <details>
+          <summary>ต้องเตรียมเอกสารอะไรก่อนติดต่อบ้าง?</summary>
+          <div class="answer">เริ่มต้นแค่ข้อมูลพื้นฐาน เช่น ชื่อโครงการ ขนาด ชั้น และราคาที่ต้องการ ส่วนเอกสารสิทธิ์ (โฉนด/หนังสือกรรมสิทธิ์ห้องชุด) และบัตรประชาชนเจ้าของ เตรียมไว้ในขั้นตอนถัดไปได้</div>
+        </details>
+        <details>
+          <summary>ค่าใช้จ่ายในการเริ่มบริการคิดอย่างไร?</summary>
+          <div class="answer">[อธิบายโครงสร้างค่าบริการ เช่น ไม่มีค่าใช้จ่ายล่วงหน้า / คิดค่าคอมมิชชั่นเมื่อขายได้ X%] สอบถามรายละเอียดได้ทางโทรศัพท์หรือไลน์</div>
+        </details>
+        <details>
+          <summary>ประกาศของฉันจะเห็นผู้ซื้อกลุ่มไหนบ้าง?</summary>
+          <div class="answer">[ระบุช่องทางลงประกาศ เช่น เว็บไซต์อสังหาฯ ชั้นนำ โซเชียลมีเดีย และเครือข่ายเอเจนต์] เพื่อเข้าถึงทั้งผู้ซื้ออยู่เองและนักลงทุน</div>
+        </details>
+        <details>
+          <summary>ช่วยขายบ้านหรือคอนโดทุกทำเลในกรุงเทพฯ ไหม?</summary>
+          <div class="answer">เราเน้นดูแล 12 ทำเลหลักทั่วกรุงเทพฯ ตั้งแต่สุขุมวิท อโศก จนถึงพระราม 3 หากทรัพย์ของคุณอยู่นอกพื้นที่ ทักมาสอบถามได้ก่อน</div>
+        </details>
+        <details>
+          <summary>ถ่ายภาพแล้วไม่พอใจผลลัพธ์ทำยังไงได้บ้าง?</summary>
+          <div class="answer">[ระบุเงื่อนไข เช่น แจ้งทีมงานเพื่อปรับแก้หรือนัดถ่ายใหม่ได้ภายใน x วัน]</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta">
+    <div class="container">
+      <h2>ไม่ต้องเตรียมอะไรให้ยุ่งยาก แค่ติดต่อมา แล้วเราจัดการต่อ</h2>
+      <p>โทรคุยกับเราก่อนก็ได้ ไม่มีข้อผูกมัด บอกเป้าหมายของคุณ แล้วเราจะดูแลขั้นตอนต่อจากนั้นให้</p>
+      <div class="hero-buttons">
+        <a class="btn btn-primary js-tel">โทร <span class="js-phone"></span></a>
+        <a class="btn btn-light js-mail">ส่งอีเมล <span class="js-email"></span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="logo">Merit<b style="color:var(--accent)">Property</b></a>
+          <p>บริการถ่ายภาพและลงประกาศขาย-เช่าอสังหาฯ ในกรุงเทพฯ</p>
+        </div>
+        <div>
+          <h4>Address</h4>
+          <p>RatPhatthana20, SaphanSung, กรุงเทพฯ</p>
+          <p>จันทร์–เสาร์ 9:00 – 18:00 น.</p>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li><a class="js-tel"><span class="js-phone"></span></a></li>
+            <li><a class="js-mail"><span class="js-email"></span></a></li>
+            <li><a class="js-line" target="_blank" rel="noopener">LINE:@398ccpcc </a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>เมนู</h4>
+          <ul>
+            <li><a href="index.html">หน้าแรก</a></li>
+            <li><a href="about.html">เกี่ยวกับเรา</a></li>
+            <li><a href="services.html">บริการ</a></li>
+            <li><a href="portfolio.html">ผลงาน</a></li>
+            <li><a href="contact.html">ติดต่อเรา</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Merit Property. สงวนลิขสิทธิ์.</span>
+        <div class="links">
+          <a href="privacy.html">นโยบายความเป็นส่วนตัว</a>
+          <a href="terms.html">ข้อกำหนดการใช้งาน</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Floating Buttons ===== -->
+  <div class="float-btns">
+    <a class="float-line js-line" target="_blank" rel="noopener" aria-label="LINE">LINE</a>
+    <a class="float-call js-tel" aria-label="โทร">📞</a>
+  </div>
+
+  <script>
+    // ======================================================
+    //  แก้ข้อมูลติดต่อที่นี่ที่เดียว แล้วจะแสดงทุกจุดในหน้า
+    //  (เมนูบน, ส่วนติดต่อ, FAQ, ปุ่มด้านล่าง, footer, ปุ่มลอย)
+    // ======================================================
+    const CONFIG = {
+      phone: "0892029776",                  // ← ใส่เบอร์โทร 10 หลัก เช่น "081-234-5678"
+      email: "kachen_8328@hotmail.com",       // ← ใส่อีเมลจริง (ใช้อีเมลเดียวทั้งเว็บ)
+      line:  "https://lin.ee/oB7vuTF",       // ลิงก์ LINE (จากเว็บเดิม)
+      formEndpoint: "https://formspree.io/f/YOUR_FORM_ID" // สมัครฟรีที่ formspree.io
+    };
+
+    const telLink = "tel:" + CONFIG.phone.replace(/[^0-9+]/g, "");
+    document.querySelectorAll(".js-phone").forEach(el => el.textContent = CONFIG.phone);
+    document.querySelectorAll(".js-email").forEach(el => el.textContent = CONFIG.email);
+    document.querySelectorAll(".js-tel").forEach(el => el.href = telLink);
+    document.querySelectorAll(".js-mail").forEach(el => el.href = "mailto:" + CONFIG.email);
+    document.querySelectorAll(".js-line").forEach(el => el.href = CONFIG.line);
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // เมนูมือถือ
+    const navLinks = document.getElementById("navLinks");
+    document.getElementById("menuToggle").addEventListener("click", () => navLinks.classList.toggle("show"));
+
+    // FAQ: เปิดได้ทีละข้อ
+    document.querySelectorAll(".faq-list details").forEach(d => {
+      d.addEventListener("toggle", () => {
+        if (d.open) document.querySelectorAll(".faq-list details").forEach(o => { if (o !== d) o.open = false; });
+      });
+    });
+
+    // ส่งฟอร์ม
+    const form = document.getElementById("contactForm");
+    const msg = document.getElementById("formMsg");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector("button");
+      msg.className = "form-msg";
+      btn.disabled = true; btn.textContent = "กำลังส่ง...";
+      try {
+        const res = await fetch(CONFIG.formEndpoint, {
+          method: "POST", body: new FormData(form), headers: { Accept: "application/json" }
+        });
+        if (!res.ok) throw new Error();
+        msg.textContent = "ส่งข้อความเรียบร้อย ขอบคุณครับ ทีมงานจะติดต่อกลับภายในวันทำการ";
+        msg.classList.add("success");
+        form.reset();
+      } catch {
+        msg.textContent = "ส่งไม่สำเร็จ กรุณาลองใหม่ หรือติดต่อทางไลน์ / โทรศัพท์";
+        msg.classList.add("error");
+      } finally {
+        btn.disabled = false; btn.textContent = "ส่งข้อความ";
+      }
+    });
+  </script>
+</body>
+</html>
