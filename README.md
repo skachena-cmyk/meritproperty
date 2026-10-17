@@ -1,2 +1,0 @@
-# meritproperty
-test website merit
