@@ -13,9 +13,9 @@
     .loading{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0}
     .work{cursor:pointer;display:flex;flex-direction:column}
     .work-img{position:relative;height:230px;background:#e5e7eb;overflow:hidden}
-    .work-img img{transition:transform .4s}
+    .work-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
     .work:hover .work-img img{transform:scale(1.05)}
-    .tag-id{left:auto;right:14px;background:var(--primary);color:var(--white);font-weight:600;z-index:2;transition:.3s}
+    .tag-id{position:absolute;top:10px;right:10px;left:auto;background:var(--primary);color:var(--white);padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;z-index:2;transition:.3s}
     .tag-id:hover{background:#06c755}
     .photo-hint{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.55);color:#fff;padding:3px 12px;border-radius:20px;font-size:.8rem}
     .work-body .price{font-size:1.2rem;font-weight:600;color:var(--accent);margin:2px 0 8px}
@@ -47,7 +47,7 @@
         <ul class="nav-links" id="navLinks">
           <li><a href="about.html">เกี่ยวกับเรา</a></li>
           <li><a href="services.html">บริการของเรา</a></li>
-          <li><a href="portfolio.html">ผลงานของเรา</a></li>
+          <li><a href="portfolio.html" class="active">ผลงานของเรา</a></li>
           <li><a href="contact.html">ติดต่อเรา</a></li>
         </ul>
         <div class="nav-actions">
@@ -96,7 +96,7 @@
         </div>
         <div>
           <h4>Address</h4>
-          <p>Ratphatthana20,Saphansung, กรุงเทพฯ</p>
+          <p>Ratphatthana 20, Saphansung, กรุงเทพฯ</p>
           <p>จันทร์–เสาร์ 9:00 – 18:00 น.</p>
         </div>
         <div>
@@ -149,17 +149,14 @@
   <script src="main.js"></script>
   <script>
     // ======================================================
-    //  ตั้งค่า (แก้เฉพาะส่วนนี้)
+    //  ตั้งค่าพาร์ทเนมตามโครงสร้าง GitHub Pages จริง
     // ======================================================
     const SETTINGS = {
-      ROOT: "/",                            // ที่อยู่โฟลเดอร์หลักของเว็บ
+      ROOT: "/meritproperty/",              // ชื่อ repository ของคุณ
       DATA_FILE: "info.json",               // ไฟล์ข้อมูลทรัพย์
       PHOTO_DIR: "propertyphotos",          // โฟลเดอร์หลักเก็บรูป
-      GH_USER: "skachena-cmyk",             // ชื่อบัญชี GitHub
-      GH_REPO: "/meritproperty/",   // ชื่อ repository
-      GH_BRANCH: "main",                    // ชื่อ branch (main หรือ master)
-      LINE_URL: "https://lin.ee/oB7vuTF",   // LINE OA (เปิดจากคอมพิวเตอร์)
-      LINE_OA_ID: "@398ccpcc"               // LINE OA (เปิดจากมือถือ พร้อมพิมพ์รหัสทรัพย์ให้)
+      LINE_URL: "https://lin.ee/oB7vuTF",   // LINE OA
+      LINE_OA_ID: "@398ccpcc"               // LINE ID
     };
 
     // ปุ่มกรองหลัก 4 ปุ่ม
@@ -170,25 +167,24 @@
       { key: "rent",  label: "ปล่อยเช่า", match: p => p.type === "rent" || /เช่า/.test(p.status || "") }
     ];
 
-    const grid    = document.getElementById("portfolioGrid");
+    const grid      = document.getElementById("portfolioGrid");
     const filterBox = document.getElementById("filters");
-    const countEl = document.getElementById("resultCount");
+    const countEl   = document.getElementById("resultCount");
     let items = [], typeNames = {}, currentFilter = FILTERS[0];
 
-    // ---------- ตัวช่วย ----------
     const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
       ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-    const enc = path => path.split("/").map(encodeURIComponent).join("/");   // รองรับชื่อไฟล์มีเว้นวรรค/ภาษาไทย
+    const enc = path => path.split("/").map(encodeURIComponent).join("/");
     const isUrl = s => /^https?:\/\//i.test(s || "");
     const folderOf = p => `${SETTINGS.PHOTO_DIR}/${p.type}/${p.id}`;
+    
     const photoUrl = (p, file) => {
       if (!file) return "";
-      if (isUrl(file)) return file;                                  // ลิงก์เต็ม
-      if (file.includes("/")) return SETTINGS.ROOT + enc(file);      // ใส่ path มาเอง
-      return SETTINGS.ROOT + enc(`${folderOf(p)}/${file}`);          // แค่ชื่อไฟล์
+      if (isUrl(file)) return file;
+      if (file.includes("/")) return SETTINGS.ROOT + enc(file);
+      return SETTINGS.ROOT + enc(`${folderOf(p)}/${file}`);
     };
 
-    // ลิงก์ LINE: มือถือพิมพ์รหัสทรัพย์ให้อัตโนมัติ, คอมพิวเตอร์เปิดหน้าเพจ
     function lineLink(id) {
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       if (isMobile) {
@@ -197,10 +193,8 @@
       return SETTINGS.LINE_URL;
     }
 
-    // ---------- ปุ่มกรอง ----------
     function buildFilters() {
       const list = [...FILTERS];
-      // ประเภทใหม่ใน "types" ที่มีทรัพย์อยู่จริง จะได้ปุ่มเพิ่มอัตโนมัติ
       Object.keys(typeNames).forEach(t => {
         if (list.some(f => f.key === t)) return;
         if (items.some(p => p.type === t)) {
@@ -223,10 +217,9 @@
       });
     }
 
-    // ---------- การ์ดทรัพย์ ----------
     function render() {
       const list = items.filter(currentFilter.match);
-      countEl.textContent = `พบ ${list.length} รายการ`;
+      if (countEl) countEl.textContent = `พบ ${list.length} รายการ`;
       if (!list.length) {
         grid.innerHTML = '<p class="loading">ยังไม่มีทรัพย์ในหมวดนี้</p>';
         return;
@@ -234,9 +227,9 @@
       grid.innerHTML = list.map(p => `
         <div class="work" data-id="${esc(p.id)}">
           <div class="work-img">
-            ${p.image ? `<img src="${esc(photoUrl(p, p.image))}" alt="${esc(p.title)}" loading="lazy" onerror="this.style.display='none'" />` : ""}
+            ${p.image ? `<img src="${esc(photoUrl(p, p.image))}" alt="${esc(p.title)}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800';" />` : ""}
             ${p.status ? `<span class="tag">${esc(p.status)}</span>` : ""}
-            <a class="tag tag-id" href="${esc(lineLink(p.id))}" target="_blank" rel="noopener" title="สอบถามทรัพย์นี้ทาง LINE">${esc(p.id)} 💬</a>
+            <a class="tag-id" href="${esc(lineLink(p.id))}" target="_blank" rel="noopener" title="สอบถามทรัพย์นี้ทาง LINE">${esc(p.id)} 💬</a>
             <span class="photo-hint">📷 ดูรูปทั้งหมด</span>
           </div>
           <div class="work-body">
@@ -253,7 +246,6 @@
         </div>`).join("");
     }
 
-    // กดการ์ด = เปิดดูรูป, กดรหัสทรัพย์ = ไป LINE
     grid.addEventListener("click", e => {
       if (e.target.closest(".tag-id")) return;
       const card = e.target.closest(".work");
@@ -262,48 +254,19 @@
       if (p) openGallery(p);
     });
 
-    // ---------- ดึงรายชื่อรูปจากโฟลเดอร์ propertyphotos/ประเภท/รหัส ----------
-    const photoCache = {};
+    // ---------- ฟังก์ชันจัดการรูปภาพใน Gallery (ดึงจากอาเรย์ photos ใน JSON หรือใช้ภาพหลัก) ----------
     async function getPhotos(p) {
-      if (photoCache[p.id]) return photoCache[p.id];
       let list = [];
-
       if (Array.isArray(p.photos) && p.photos.length) {
-        // ถ้าใส่รายชื่อรูปไว้ใน info.json จะใช้รายการนั้นก่อน
         list = p.photos.map(f => photoUrl(p, f));
       } else {
-        const key = "mp-photos-" + p.id;
-        const saved = sessionStorage.getItem(key);
-        if (saved) {
-          list = JSON.parse(saved);
-        } else {
-          try {
-            const api = `https://api.github.com/repos/${SETTINGS.GH_USER}/${SETTINGS.GH_REPO}/contents/${enc(folderOf(p))}?ref=${SETTINGS.GH_BRANCH}`;
-            const res = await fetch(api);
-            if (res.ok) {
-              const files = await res.json();
-              list = files
-                .filter(f => f.type === "file" && /\.(jpe?g|png|webp|gif|avif)$/i.test(f.name))
-                .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
-                .map(f => SETTINGS.ROOT + enc(f.path));
-              sessionStorage.setItem(key, JSON.stringify(list));
-            } else {
-              console.warn(`อ่านโฟลเดอร์ ${folderOf(p)} ไม่ได้ (HTTP ${res.status})`);
-            }
-          } catch (err) {
-            console.warn("ดึงรายชื่อรูปไม่สำเร็จ:", err);
-          }
-        }
+        // หากไม่ได้ระบุอาเรย์ photos จะใช้ภาพปกเป็นหลัก (สามารถเพิ่มรายการรูปใน info.json ของทรัพย์นั้นๆ ได้)
+        list = [photoUrl(p, p.image)];
       }
-
-      // ให้รูปปก ("image") อยู่เป็นรูปแรกเสมอ
-      const cover = photoUrl(p, p.image);
-      if (cover) list = [cover, ...list.filter(u => u !== cover)];
-      photoCache[p.id] = list;
-      return list;
+      return list.filter(Boolean);
     }
 
-    // ---------- หน้าต่างดูรูป ----------
+    // ---------- หน้าต่างดูรูป (Lightbox) ----------
     const lb = document.getElementById("lightbox");
     const lbImg = document.getElementById("lbImg");
     const lbThumbs = document.getElementById("lbThumbs");
@@ -356,7 +319,7 @@
       if (e.key === "ArrowLeft") showPhoto(lbIndex - 1);
       if (e.key === "ArrowRight") showPhoto(lbIndex + 1);
     });
-    // ปัดซ้าย-ขวาบนมือถือ
+
     let touchX = 0;
     lbImg.addEventListener("touchstart", e => touchX = e.touches[0].clientX, { passive: true });
     lbImg.addEventListener("touchend", e => {
@@ -364,11 +327,11 @@
       if (Math.abs(dx) > 50) showPhoto(lbIndex + (dx < 0 ? 1 : -1));
     });
 
-    // ---------- โหลดข้อมูล ----------
+    // ---------- โหลดข้อมูลจาก info.json ----------
     async function load() {
       grid.innerHTML = '<p class="loading">กำลังโหลดข้อมูลทรัพย์...</p>';
       try {
-        const res = await fetch(SETTINGS.ROOT + SETTINGS.DATA_FILE, { cache: "no-store" });
+        const res = await fetch(SETTINGS.ROOT + SETTINGS.DATA_FILE + "?v=" + Date.now(), { cache: "no-store" });
         if (!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
         typeNames = data.types || {};
@@ -377,9 +340,7 @@
         render();
       } catch (err) {
         console.error("โหลด info.json ไม่สำเร็จ:", err);
-        grid.innerHTML = location.protocol === "file:"
-          ? '<p class="loading">เปิดไฟล์ด้วยการดับเบิลคลิกจะโหลดข้อมูลไม่ได้ กรุณาเปิดผ่าน Live Server หรือ GitHub Pages</p>'
-          : '<p class="loading">ขออภัย โหลดข้อมูลทรัพย์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง</p>';
+        grid.innerHTML = '<p class="loading">ขออภัย โหลดข้อมูลทรัพย์ไม่สำเร็จ กรุณาตรวจสอบไฟล์ info.json</p>';
       }
     }
     load();
