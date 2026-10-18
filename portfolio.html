@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* ===== ส่วนเสริมหน้าผลงาน (ใช้สีเดิมจาก style.css) ===== */
     .result-count{text-align:center;color:var(--muted);margin:-15px 0 30px;font-size:.95rem}
     .loading{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0}
     .work{cursor:pointer;display:flex;flex-direction:column}
@@ -21,7 +20,6 @@
     .work-body .price{font-size:1.2rem;font-weight:600;color:var(--accent);margin:2px 0 8px}
     .work-body .desc{color:var(--muted);font-size:.92rem;margin-top:10px}
 
-    /* ===== หน้าต่างดูรูป ===== */
     .lightbox{position:fixed;inset:0;background:rgba(10,20,35,.95);z-index:2000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px}
     .lightbox.open{display:flex}
     .lb-head{color:#fff;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center;margin-bottom:14px;text-align:center}
@@ -67,7 +65,6 @@
     </div>
   </section>
 
-  <!-- ===== ผลงานของเรา (ดึงข้อมูลจาก info.json) ===== -->
   <section>
     <div class="container">
       <div class="filters" id="filters"></div>
@@ -130,7 +127,6 @@
     <a class="float-call js-tel" aria-label="โทร">📞</a>
   </div>
 
-  <!-- ===== หน้าต่างดูรูปทั้งหมด ===== -->
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <button class="lb-close" id="lbClose" aria-label="ปิด">✕</button>
     <div class="lb-head">
@@ -149,17 +145,19 @@
   <script src="main.js"></script>
   <script>
     // ======================================================
-    //  ตั้งค่าพาร์ทเนมตามโครงสร้าง GitHub Pages จริง
+    //  ตั้งค่าตัวแปร (ตรวจสอบให้ตรงกับ GitHub จริงของคุณ)
     // ======================================================
     const SETTINGS = {
-      ROOT: "/meritproperty/",              // ชื่อ repository ของคุณ
-      DATA_FILE: "info.json",               // ไฟล์ข้อมูลทรัพย์
-      PHOTO_DIR: "propertyphotos",          // โฟลเดอร์หลักเก็บรูป
-      LINE_URL: "https://lin.ee/oB7vuTF",   // LINE OA
-      LINE_OA_ID: "@398ccpcc"               // LINE ID
+      ROOT: "/meritproperty/",              // ชื่อ repository
+      DATA_FILE: "info.json",
+      PHOTO_DIR: "propertyphotos",
+      GH_USER: "skachena-cmyk",             // ชื่อบัญชี GitHub ของคุณ
+      GH_REPO: "meritproperty",             // ชื่อ repository (หมีอนชื่อโฟลเดอร์หลัก)
+      GH_BRANCH: "main",                    // ชื่อ branch หลัก
+      LINE_URL: "https://lin.ee/oB7vuTF",
+      LINE_OA_ID: "@398ccpcc"
     };
 
-    // ปุ่มกรองหลัก 4 ปุ่ม
     const FILTERS = [
       { key: "all",   label: "ทั้งหมด",   match: () => true },
       { key: "condo", label: "คอนโด",    match: p => p.type === "condo" },
@@ -167,9 +165,9 @@
       { key: "rent",  label: "ปล่อยเช่า", match: p => p.type === "rent" || /เช่า/.test(p.status || "") }
     ];
 
-    const grid      = document.getElementById("portfolioGrid");
+    const grid = document.getElementById("portfolioGrid");
     const filterBox = document.getElementById("filters");
-    const countEl   = document.getElementById("resultCount");
+    const countEl = document.getElementById("resultCount");
     let items = [], typeNames = {}, currentFilter = FILTERS[0];
 
     const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
@@ -187,25 +185,20 @@
 
     function lineLink(id) {
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (isMobile) {
-        return `https://line.me/R/oaMessage/${encodeURIComponent(SETTINGS.LINE_OA_ID)}/?${encodeURIComponent("สนใจทรัพย์รหัส " + id)}`;
-      }
-      return SETTINGS.LINE_URL;
+      return isMobile ? `https://line.me/R/oaMessage/${encodeURIComponent(SETTINGS.LINE_OA_ID)}/?${encodeURIComponent("สนใจทรัพย์รหัส " + id)}` : SETTINGS.LINE_URL;
     }
 
     function buildFilters() {
       const list = [...FILTERS];
       Object.keys(typeNames).forEach(t => {
-        if (list.some(f => f.key === t)) return;
-        if (items.some(p => p.type === t)) {
+        if (!list.some(f => f.key === t) && items.some(p => p.type === t)) {
           list.push({ key: t, label: typeNames[t], match: p => p.type === t });
         }
       });
 
-      filterBox.innerHTML = list.map((f, i) => {
-        const n = items.filter(f.match).length;
-        return `<button class="filter-btn${i === 0 ? " active" : ""}" data-i="${i}">${esc(f.label)} (${n})</button>`;
-      }).join("");
+      filterBox.innerHTML = list.map((f, i) => 
+        `<button class="filter-btn${i === 0 ? " active" : ""}" data-i="${i}">${esc(f.label)} (${items.filter(f.match).length})</button>`
+      ).join("");
 
       filterBox.querySelectorAll(".filter-btn").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -220,16 +213,14 @@
     function render() {
       const list = items.filter(currentFilter.match);
       if (countEl) countEl.textContent = `พบ ${list.length} รายการ`;
-      if (!list.length) {
-        grid.innerHTML = '<p class="loading">ยังไม่มีทรัพย์ในหมวดนี้</p>';
-        return;
-      }
+      if (!list.length) { grid.innerHTML = '<p class="loading">ยังไม่มีทรัพย์ในหมวดนี้</p>'; return; }
+      
       grid.innerHTML = list.map(p => `
         <div class="work" data-id="${esc(p.id)}">
           <div class="work-img">
             ${p.image ? `<img src="${esc(photoUrl(p, p.image))}" alt="${esc(p.title)}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800';" />` : ""}
             ${p.status ? `<span class="tag">${esc(p.status)}</span>` : ""}
-            <a class="tag-id" href="${esc(lineLink(p.id))}" target="_blank" rel="noopener" title="สอบถามทรัพย์นี้ทาง LINE">${esc(p.id)} 💬</a>
+            <a class="tag-id" href="${esc(lineLink(p.id))}" target="_blank" rel="noopener" title="สอบถามทาง LINE">${esc(p.id)} 💬</a>
             <span class="photo-hint">📷 ดูรูปทั้งหมด</span>
           </div>
           <div class="work-body">
@@ -237,9 +228,9 @@
             ${p.price ? `<div class="price">${esc(p.price)}</div>` : ""}
             <div class="loc">📍 ${esc(p.location)}</div>
             <div class="meta">
-              ${p.beds  ? `<span>🛏 ${esc(p.beds)} ห้องนอน</span>` : ""}
+              ${p.beds ? `<span>🛏 ${esc(p.beds)} ห้องนอน</span>` : ""}
               ${p.baths ? `<span>🛁 ${esc(p.baths)} ห้องน้ำ</span>` : ""}
-              ${p.area  ? `<span>📐 ${esc(p.area)}</span>` : ""}
+              ${p.area ? `<span>📐 ${esc(p.area)}</span>` : ""}
             </div>
             ${p.description ? `<p class="desc">${esc(p.description)}</p>` : ""}
           </div>
@@ -249,21 +240,48 @@
     grid.addEventListener("click", e => {
       if (e.target.closest(".tag-id")) return;
       const card = e.target.closest(".work");
-      if (!card) return;
-      const p = items.find(x => x.id === card.dataset.id);
-      if (p) openGallery(p);
+      if (card) {
+        const p = items.find(x => x.id === card.dataset.id);
+        if (p) openGallery(p);
+      }
     });
 
-    // ---------- ฟังก์ชันจัดการรูปภาพใน Gallery (ดึงจากอาเรย์ photos ใน JSON หรือใช้ภาพหลัก) ----------
+    // ---------- ระบบดึงรูปภาพทั้งหมดในโฟลเดอร์ GitHub อัตโนมัติ ----------
+    const photoCache = {};
     async function getPhotos(p) {
+      if (photoCache[p.id]) return photoCache[p.id];
       let list = [];
+
       if (Array.isArray(p.photos) && p.photos.length) {
         list = p.photos.map(f => photoUrl(p, f));
       } else {
-        // หากไม่ได้ระบุอาเรย์ photos จะใช้ภาพปกเป็นหลัก (สามารถเพิ่มรายการรูปใน info.json ของทรัพย์นั้นๆ ได้)
-        list = [photoUrl(p, p.image)];
+        const key = "mp-photos-" + p.id;
+        const saved = sessionStorage.getItem(key);
+        if (saved) {
+          list = JSON.parse(saved);
+        } else {
+          try {
+            const api = `https://api.github.com/repos/${SETTINGS.GH_USER}/${SETTINGS.GH_REPO}/contents/${enc(folderOf(p))}?ref=${SETTINGS.GH_BRANCH}`;
+            const res = await fetch(api);
+            if (res.ok) {
+              const files = await res.json();
+              list = files
+                .filter(f => f.type === "file" && /\.(jpe?g|png|webp|gif|avif)$/i.test(f.name))
+                .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
+                .map(f => SETTINGS.ROOT + enc(f.path));
+              sessionStorage.setItem(key, JSON.stringify(list));
+            }
+          } catch (err) {
+            console.warn("ดึงรูปผ่าน API ไม่สำเร็จ:", err);
+          }
+        }
       }
-      return list.filter(Boolean);
+
+      const cover = photoUrl(p, p.image);
+      if (cover) list = [cover, ...list.filter(u => u !== cover)];
+      list = [...new Set(list)];
+      photoCache[p.id] = list;
+      return list;
     }
 
     // ---------- หน้าต่างดูรูป (Lightbox) ----------
@@ -287,8 +305,7 @@
 
       lbList = await getPhotos(p);
       if (!lbList.length) { lbThumbs.textContent = "ยังไม่มีรูปของทรัพย์นี้"; return; }
-      lbThumbs.innerHTML = lbList.map((u, i) =>
-        `<img src="${esc(u)}" data-i="${i}" loading="lazy" alt="รูปที่ ${i + 1}" />`).join("");
+      lbThumbs.innerHTML = lbList.map((u, i) => `<img src="${esc(u)}" data-i="${i}" loading="lazy" alt="" />`).join("");
       showPhoto(0);
     }
 
@@ -313,6 +330,7 @@
     document.getElementById("lbClose").onclick = closeGallery;
     lb.addEventListener("click", e => { if (e.target === lb) closeGallery(); });
     lbThumbs.addEventListener("click", e => { if (e.target.dataset.i) showPhoto(+e.target.dataset.i); });
+    
     document.addEventListener("keydown", e => {
       if (!lb.classList.contains("open")) return;
       if (e.key === "Escape") closeGallery();
@@ -327,7 +345,6 @@
       if (Math.abs(dx) > 50) showPhoto(lbIndex + (dx < 0 ? 1 : -1));
     });
 
-    // ---------- โหลดข้อมูลจาก info.json ----------
     async function load() {
       grid.innerHTML = '<p class="loading">กำลังโหลดข้อมูลทรัพย์...</p>';
       try {
