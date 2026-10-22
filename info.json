@@ -19,6 +19,20 @@
       "area": "35 ตร.ม.",
       "price": "฿20,000 / เดือน",
       "image": "C001 life ladpro.jpeg",
+      "photos": [
+
+        "C001 life ladpro.jpeg",
+
+        "C001 life ladpro (2).jpeg",
+
+        "C001 life ladpro (3).jpeg",
+
+        "C001 life ladpro (4).jpeg",
+
+        "C001 life ladpro (5).jpeg"
+
+      ],
+
       "description": "ชั้น13 วิวเมือง ตกแต่งครบ พร้อมเข้าอยู่"
     },
     {
@@ -32,6 +46,13 @@
       "area": "116 ตร.ม.",
       "price": "฿85,000 / เดือน",
       "image": "C002 siames exclusive31.jpeg",
+      "photos": [
+        "C002 siames exclusive31.jpeg",
+        "C002 siames exclusive31 (2).jpeg",
+        "C002 siames exclusive31 (3).jpeg",
+        "C002 siames exclusive31 (4).jpeg",
+        "C002 siames exclusive31 (5).jpeg",
+      ],
       "description": "ชั้น20 แสงธรรมชาติดี ใกล้ห้างและโรงพยาบาล"
     },
     {
@@ -58,6 +79,13 @@
       "area": "55 ตร.ม.",
       "price": "฿6,500,000",
       "image": "C003 embassy pattaya.jpeg",
+      "photos": [
+        "C003 embassy pattaya.jpeg",
+        "C003 embassy pattaya (2).jpeg",
+        "C003 embassy pattaya (3).jpeg",
+        "C003 embassy pattaya (4).jpeg",
+        "C003 embassy pattaya (5).jpeg",
+      ],
       "description": "ใกล้ หาดจอมเทียน พัทยา เดินทางสะดวก ชั้น 8"
     },
     { 
@@ -71,6 +99,14 @@
       "area": "83 ตร.ม.",
       "price": "฿65,000 / เดือน",
       "image": "C004 brepublic 101.jpeg",
+       "photos": [
+         "C004 brepublic 101.jpeg",
+         "C004 brepublic 101 (2).jpeg",
+         "C004 brepublic 101 (3).jpeg",
+         "C004 brepublic 101 (4).jpeg",
+         "C004 brepublic 101 (5).jpeg",
+       ],
+
       "description": "ใกล้ ห้างสรรพสินค้า BTS ชั้น 3"
     },
     {

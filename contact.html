@@ -377,7 +377,7 @@
       phone: "0892029776",                  // ← ใส่เบอร์โทร 10 หลัก เช่น "081-234-5678"
       email: "kachen_8328@hotmail.com",       // ← ใส่อีเมลจริง (ใช้อีเมลเดียวทั้งเว็บ)
       line:  "https://lin.ee/oB7vuTF",       // ลิงก์ LINE (จากเว็บเดิม)
-      formEndpoint: "https://formspree.io/f/YOUR_FORM_ID" // สมัครฟรีที่ formspree.io
+      formEndpoint:"https://script.google.com/macros/s/AKfycbxzEzj2ZAoHI-nIuPAbnoQPN_fOchiRzWhOgWXN_DhGr_i3r3r85qat8ueRGuI85_qW/exec", // googlesheet.google.com
     };
 
     const telLink = "tel:" + CONFIG.phone.replace(/[^0-9+]/g, "");
@@ -401,27 +401,55 @@
 
     // ส่งฟอร์ม
     const form = document.getElementById("contactForm");
-    const msg = document.getElementById("formMsg");
+
+    const msg  = document.getElementById("formMsg");
+
+
     form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const btn = form.querySelector("button");
-      msg.className = "form-msg";
-      btn.disabled = true; btn.textContent = "กำลังส่ง...";
-      try {
-        const res = await fetch(CONFIG.formEndpoint, {
-          method: "POST", body: new FormData(form), headers: { Accept: "application/json" }
-        });
-        if (!res.ok) throw new Error();
-        msg.textContent = "ส่งข้อความเรียบร้อย ขอบคุณครับ ทีมงานจะติดต่อกลับภายในวันทำการ";
-        msg.classList.add("success");
-        form.reset();
-      } catch {
-        msg.textContent = "ส่งไม่สำเร็จ กรุณาลองใหม่ หรือติดต่อทางไลน์ / โทรศัพท์";
-        msg.classList.add("error");
-      } finally {
-        btn.disabled = false; btn.textContent = "ส่งข้อความ";
-      }
-    });
+
+     e.preventDefault();
+
+     const btn = form.querySelector("button[type=submit]");
+
+     msg.className = "form-msg";
+
+     btn.disabled = true;
+
+     btn.textContent = "กำลังส่ง...";
+
+
+     try {
+
+       const res  = await fetch(CONFIG.formEndpoint, { method: "POST", body: new FormData(form) });
+
+       const data = await res.json();
+
+       if (data.result !== "success") throw new Error(data.message || "ส่งไม่สำเร็จ");
+
+
+       msg.textContent = "ส่งข้อความเรียบร้อย ขอบคุณครับ ทีมงานจะติดต่อกลับภายในวันทำการ";
+
+       msg.classList.add("success");
+
+       form.reset();
+
+    } catch (err) {
+
+       console.error("ส่งฟอร์มไม่สำเร็จ:", err);
+
+       msg.textContent = "ส่งไม่สำเร็จ กรุณาลองใหม่ หรือติดต่อทางไลน์ / โทรศัพท์";
+
+       msg.classList.add("error");
+
+    } finally {
+
+       btn.disabled = false;    
+
+       btn.textContent = "ส่งข้อความ";
+
+    }
+
+   });
   </script>
 </body>
 </html>
