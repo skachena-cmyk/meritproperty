@@ -144,16 +144,13 @@
 
   <script src="main.js"></script>
   <script>
-    // ======================================================
-    //  ตั้งค่าตัวแปร (ตรวจสอบให้ตรงกับ GitHub จริงของคุณ)
-    // ======================================================
     const SETTINGS = {
-      ROOT: "/meritproperty/",              // ชื่อ repository
+      ROOT: "/meritproperty/",
       DATA_FILE: "info.json",
       PHOTO_DIR: "propertyphotos",
-      GH_USER: "skachena-cmyk",             // ชื่อบัญชี GitHub ของคุณ
-      GH_REPO: "meritproperty",             // ชื่อ repository (หมีอนชื่อโฟลเดอร์หลัก)
-      GH_BRANCH: "main",                    // ชื่อ branch หลัก
+      GH_USER: "skachena-cmyk",
+      GH_REPO: "meritproperty",
+      GH_BRANCH: "main",
       LINE_URL: "https://lin.ee/oB7vuTF",
       LINE_OA_ID: "@398ccpcc"
     };
@@ -173,19 +170,47 @@
     const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
       ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
     const enc = path => path.split("/").map(encodeURIComponent).join("/");
-    const isUrl = s => /^https?:\/\//i.test(s || "");
     const folderOf = p => `${SETTINGS.PHOTO_DIR}/${p.type}/${p.id}`;
-    
-    const photoUrl = (p, file) => {
-      if (!file) return "";
-      if (isUrl(file)) return file;
-      if (file.includes("/")) return SETTINGS.ROOT + enc(file);
-      return SETTINGS.ROOT + enc(`${folderOf(p)}/${file}`);
-    };
 
     function lineLink(id) {
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       return isMobile ? `https://line.me/R/oaMessage/${encodeURIComponent(SETTINGS.LINE_OA_ID)}/?${encodeURIComponent("สนใจทรัพย์รหัส " + id)}` : SETTINGS.LINE_URL;
+    }
+
+    // ---------- ฟังก์ชันดึงรูปจากโฟลเดอร์ GitHub อัตโนมัติ (บังคับใช้รูปในโฟลเดอร์เท่านั้น) ----------
+    const photoCache = {};
+    async function getPhotos(p) {
+      if (photoCache[p.id]) return photoCache[p.id];
+      let list = [];
+
+      const key = "mp-photos-" + p.id;
+      const saved = sessionStorage.getItem(key);
+      if (saved) {
+        list = JSON.parse(saved);
+      } else {
+        try {
+          const api = `https://api.github.com/repos/${SETTINGS.GH_USER}/${SETTINGS.GH_REPO}/contents/${enc(folderOf(p))}?ref=${SETTINGS.GH_BRANCH}`;
+          const res = await fetch(api);
+          if (res.ok) {
+            const files = await res.json();
+            list = files
+              .filter(f => f.type === "file" && /\.(jpe?g|png|webp|gif|avif)$/i.test(f.name))
+              .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
+              .map(f => SETTINGS.ROOT + enc(f.path));
+            sessionStorage.setItem(key, JSON.stringify(list));
+          }
+        } catch (err) {
+          console.warn("ดึงรูปผ่าน GitHub API ไม่สำเร็จ:", err);
+        }
+      }
+
+      // Fallback ภาพสำรองกรณีดึงโฟลเดอร์ไม่ได้
+      if (!list.length) {
+        list = ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800"];
+      }
+
+      photoCache[p.id] = list;
+      return list;
     }
 
     function buildFilters() {
@@ -210,31 +235,38 @@
       });
     }
 
-    function render() {
+    async function render() {
       const list = items.filter(currentFilter.match);
       if (countEl) countEl.textContent = `พบ ${list.length} รายการ`;
       if (!list.length) { grid.innerHTML = '<p class="loading">ยังไม่มีทรัพย์ในหมวดนี้</p>'; return; }
       
-      grid.innerHTML = list.map(p => `
-        <div class="work" data-id="${esc(p.id)}">
-          <div class="work-img">
-            ${p.image ? `<img src="${esc(photoUrl(p, p.image))}" alt="${esc(p.title)}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800';" />` : ""}
-            ${p.status ? `<span class="tag">${esc(p.status)}</span>` : ""}
-            <a class="tag-id" href="${esc(lineLink(p.id))}" target="_blank" rel="noopener" title="สอบถามทาง LINE">${esc(p.id)} 💬</a>
-            <span class="photo-hint">📷 ดูรูปทั้งหมด</span>
-          </div>
-          <div class="work-body">
-            <h3>${esc(p.title)}</h3>
-            ${p.price ? `<div class="price">${esc(p.price)}</div>` : ""}
-            <div class="loc">📍 ${esc(p.location)}</div>
-            <div class="meta">
-              ${p.beds ? `<span>🛏 ${esc(p.beds)} ห้องนอน</span>` : ""}
-              ${p.baths ? `<span>🛁 ${esc(p.baths)} ห้องน้ำ</span>` : ""}
-              ${p.area ? `<span>📐 ${esc(p.area)}</span>` : ""}
+      // ดึงรูปแรกจากโฟลเดอร์มาแสดงเป็นรูปปกของการ์ดโดยรอให้โหลดเสร็จพร้อมกัน
+      const cardsHtml = await Promise.all(list.map(async p => {
+        const imgs = await getPhotos(p);
+        const coverImg = imgs[0] || "";
+        return `
+          <div class="work" data-id="${esc(p.id)}">
+            <div class="work-img">
+              ${coverImg ? `<img src="${esc(coverImg)}" alt="${esc(p.title)}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800';" />` : ""}
+              ${p.status ? `<span class="tag">${esc(p.status)}</span>` : ""}
+              <a class="tag-id" href="${esc(lineLink(p.id))}" target="_blank" rel="noopener" title="สอบถามทาง LINE">${esc(p.id)} 💬</a>
+              <span class="photo-hint">📷 ดูรูปทั้งหมด</span>
             </div>
-            ${p.description ? `<p class="desc">${esc(p.description)}</p>` : ""}
-          </div>
-        </div>`).join("");
+            <div class="work-body">
+              <h3>${esc(p.title)}</h3>
+              ${p.price ? `<div class="price">${esc(p.price)}</div>` : ""}
+              <div class="loc">📍 ${esc(p.location)}</div>
+              <div class="meta">
+                ${p.beds ? `<span>🛏 ${esc(p.beds)} ห้องนอน</span>` : ""}
+                ${p.baths ? `<span>🛁 ${esc(p.baths)} ห้องน้ำ</span>` : ""}
+                ${p.area ? `<span>📐 ${esc(p.area)}</span>` : ""}
+              </div>
+              ${p.description ? `<p class="desc">${esc(p.description)}</p>` : ""}
+            </div>
+          </div>`;
+      }));
+      
+      grid.innerHTML = cardsHtml.join("");
     }
 
     grid.addEventListener("click", e => {
@@ -245,44 +277,6 @@
         if (p) openGallery(p);
       }
     });
-
-    // ---------- ระบบดึงรูปภาพทั้งหมดในโฟลเดอร์ GitHub อัตโนมัติ ----------
-    const photoCache = {};
-    async function getPhotos(p) {
-      if (photoCache[p.id]) return photoCache[p.id];
-      let list = [];
-
-      if (Array.isArray(p.photos) && p.photos.length) {
-        list = p.photos.map(f => photoUrl(p, f));
-      } else {
-        const key = "mp-photos-" + p.id;
-        const saved = sessionStorage.getItem(key);
-        if (saved) {
-          list = JSON.parse(saved);
-        } else {
-          try {
-            const api = `https://api.github.com/repos/${SETTINGS.GH_USER}/${SETTINGS.GH_REPO}/contents/${enc(folderOf(p))}?ref=${SETTINGS.GH_BRANCH}`;
-            const res = await fetch(api);
-            if (res.ok) {
-              const files = await res.json();
-              list = files
-                .filter(f => f.type === "file" && /\.(jpe?g|png|webp|gif|avif)$/i.test(f.name))
-                .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
-                .map(f => SETTINGS.ROOT + enc(f.path));
-              sessionStorage.setItem(key, JSON.stringify(list));
-            }
-          } catch (err) {
-            console.warn("ดึงรูปผ่าน API ไม่สำเร็จ:", err);
-          }
-        }
-      }
-
-      const cover = photoUrl(p, p.image);
-      if (cover) list = [cover, ...list.filter(u => u !== cover)];
-      list = [...new Set(list)];
-      photoCache[p.id] = list;
-      return list;
-    }
 
     // ---------- หน้าต่างดูรูป (Lightbox) ----------
     const lb = document.getElementById("lightbox");
@@ -354,7 +348,7 @@
         typeNames = data.types || {};
         items = Array.isArray(data.properties) ? data.properties : [];
         buildFilters();
-        render();
+        await render();
       } catch (err) {
         console.error("โหลด info.json ไม่สำเร็จ:", err);
         grid.innerHTML = '<p class="loading">ขออภัย โหลดข้อมูลทรัพย์ไม่สำเร็จ กรุณาตรวจสอบไฟล์ info.json</p>';
