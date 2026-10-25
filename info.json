@@ -34,15 +34,15 @@
     },
     {
       "id": "C002",
-      "title": "คอนโดSiamese Exclusive31 ห้องมุม",
+      "title": "คอนโด Lette Dwelling Sukhumvit 26",
       "type": "condo",
-      "status": "ปล่อยเช่าแล้ว",
-      "location": "สุขุมวิท",
-      "beds": 3,
-      "baths": 2,
-      "area": "116 ตร.ม.",
-      "price": "฿85,000 / เดือน",
-      "description": "ชั้น20 แสงธรรมชาติดี ใกล้ห้างและโรงพยาบาล"
+      "status": "กำลังขาย",
+      "location": "สุขุมวิท 26",
+      "beds": 1,
+      "baths": 1,
+      "area": "32 ตร.ม.",
+      "price": "฿3,980,000",
+      "description": "ตกแต่งพร้อมอยู่อาศัย ใกล้ BTS พร้อมพงษ์ และห้างสรรพสินค้าเอ็มโพเรียม"
     },
     {
       "id": "H001",
